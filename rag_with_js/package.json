@@ -1,0 +1,19 @@
+{
+  "name": "rag_with_js",
+  "version": "1.0.0",
+  "description": "RAG tool for Real estate data",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Sanket Tikam",
+  "license": "ISC",
+  "dependencies": {
+    "@langchain/textsplitters": "^1.0.1",
+    "@supabase/supabase-js": "^2.86.0",
+    "cors": "^2.8.5",
+    "dotenv": "^17.2.3",
+    "express": "^5.1.0",
+    "openai": "^6.9.1"
+  }
+}
