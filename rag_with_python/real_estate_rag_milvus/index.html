@@ -1,0 +1,684 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Property AI Guru - Real Estate Assistant</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Segoe+UI:wght@400;500;600;700&family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&display=swap">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(135deg, #0f0f0f 0%, #1a1a1a 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 900px;
+            height: 90vh;
+            background: #1e1e1e;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            border: 1px solid #333;
+        }
+
+        /* Header */
+        .header {
+            background: linear-gradient(135deg, #1a1a1a 0%, #2a2a2a 100%);
+            color: white;
+            padding: 25px 30px;
+            text-align: center;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+            border-bottom: 1px solid #333;
+        }
+
+        .header h1 {
+            font-size: 28px;
+            font-weight: 700;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            color: #00d4ff;
+        }
+
+        .header .icon {
+            font-size: 32px;
+        }
+
+        .header p {
+            font-size: 14px;
+            opacity: 0.8;
+            margin-top: 8px;
+            color: #aaa;
+        }
+
+        /* Chat Area */
+        .chat-area {
+            flex: 1;
+            overflow-y: auto;
+            padding: 25px 30px;
+            background: #1e1e1e;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .chat-area::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .chat-area::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .chat-area::-webkit-scrollbar-thumb {
+            background: rgba(0, 212, 255, 0.3);
+            border-radius: 4px;
+        }
+
+        .chat-area::-webkit-scrollbar-thumb:hover {
+            background: rgba(0, 212, 255, 0.5);
+        }
+
+        .message {
+            display: flex;
+            margin-bottom: 12px;
+            animation: slideIn 0.3s ease;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .message.user {
+            justify-content: flex-end;
+        }
+
+        .message.bot {
+            justify-content: flex-start;
+        }
+
+        .message-content {
+            max-width: 70%;
+            padding: 12px 16px;
+            border-radius: 12px;
+            line-height: 1.6;
+            font-size: 15px;
+        }
+
+        .message.user .message-content {
+            background: linear-gradient(135deg, #00d4ff 0%, #0099cc 100%);
+            color: white;
+            border-bottom-right-radius: 4px;
+            box-shadow: 0 4px 12px rgba(0, 212, 255, 0.2);
+        }
+
+        .message.bot .message-content {
+            background: #2a2a2a;
+            color: #e0e0e0;
+            border: 1px solid #404040;
+            border-bottom-left-radius: 4px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Property Card Styling in Bot Messages */
+        .property-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .property-item {
+            background: white;
+            border: 1px solid #e0e0e0;
+            border-radius: 12px;
+            padding: 16px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .property-item:hover {
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.2);
+            border-color: #667eea;
+            transform: translateY(-2px);
+        }
+
+        .property-number {
+            font-size: 12px;
+            color: #667eea;
+            font-weight: 600;
+            margin-bottom: 6px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .property-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: #222;
+            margin-bottom: 8px;
+        }
+
+        .property-description {
+            font-size: 14px;
+            color: #666;
+            line-height: 1.5;
+            margin-bottom: 12px;
+        }
+
+        .property-link {
+            display: inline-block;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 8px 14px;
+            border-radius: 6px;
+            text-decoration: none;
+            font-size: 13px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .property-link:hover {
+            transform: translateX(4px);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+        }
+
+        /* Typing Indicator */
+        .typing-indicator {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 12px 16px;
+            background: #2a2a2a;
+            border: 1px solid #404040;
+            border-radius: 12px;
+            width: fit-content;
+            border-bottom-left-radius: 4px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+        }
+
+        .typing-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #00d4ff;
+            animation: typing 1.4s infinite;
+        }        .typing-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #667eea;
+            animation: typing 1.4s infinite;
+        }
+
+        .typing-dot:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+
+        .typing-dot:nth-child(3) {
+            animation-delay: 0.4s;
+        }
+
+        @keyframes typing {
+            0%, 60%, 100% {
+                opacity: 0.3;
+                transform: translateY(0);
+            }
+            30% {
+                opacity: 1;
+                transform: translateY(-10px);
+            }
+        }
+
+        /* Input Form */
+        .input-area {
+            padding: 20px 30px;
+            background: #2a2a2a;
+            border-top: 1px solid #333;
+            display: flex;
+            gap: 12px;
+        }
+
+        form {
+            display: flex;
+            gap: 12px;
+            width: 100%;
+        }
+
+        input {
+            flex: 1;
+            padding: 12px 16px;
+            border: 2px solid #404040;
+            border-radius: 25px;
+            font-size: 15px;
+            font-family: inherit;
+            transition: all 0.3s ease;
+            outline: none;
+            background: #1e1e1e;
+            color: #e0e0e0;
+        }
+
+        input:focus {
+            border-color: #00d4ff;
+            box-shadow: 0 0 0 3px rgba(0, 212, 255, 0.1);
+            background: #252525;
+        }
+
+        input::placeholder {
+            color: #666;
+        }
+
+        button {
+            padding: 12px 20px;
+            background: #00d4ff;
+            color: white;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 15px;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            min-width: 100px;
+            box-shadow: 0 4px 15px rgba(0, 212, 255, 0.2);
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 212, 255, 0.4);
+            background: #00e6ff;
+        }
+
+        button:active {
+            transform: translateY(0);
+        }
+
+        button .icon {
+            font-size: 20px;
+        }
+
+        /* Empty State */
+        .empty-state {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            flex: 1;
+            color: #999;
+            text-align: center;
+            gap: 15px;
+        }
+
+        .empty-state .icon {
+            font-size: 64px;
+            color: #404040;
+        }
+
+        .empty-state p {
+            font-size: 16px;
+            color: #aaa;
+            margin: 0;
+        }
+
+        .empty-state .suggestions {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-top: 15px;
+            width: 100%;
+        }
+
+        .suggestion-btn {
+            background: #2a2a2a;
+            border: 2px solid #404040;
+            padding: 12px 16px;
+            border-radius: 12px;
+            cursor: pointer;
+            font-size: 14px;
+            color: #aaa;
+            transition: all 0.3s ease;
+            max-width: 400px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        .suggestion-btn:hover {
+            border-color: #00d4ff;
+            background: rgba(0, 212, 255, 0.1);
+            color: #00d4ff;
+            transform: translateX(5px);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .container {
+                height: 100vh;
+                border-radius: 0;
+                max-width: 100%;
+            }
+
+            .message-content {
+                max-width: 85%;
+            }
+
+            .header {
+                padding: 15px 20px;
+            }
+
+            .header h1 {
+                font-size: 22px;
+            }
+
+            .chat-area {
+                padding: 15px 20px;
+            }
+
+            .input-area {
+                padding: 15px 20px;
+            }
+
+            form {
+                gap: 8px;
+            }
+
+            input {
+                padding: 10px 14px;
+                font-size: 14px;
+            }
+
+            button {
+                padding: 10px 16px;
+                min-width: auto;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>
+                <span class="icon material-symbols-outlined">home</span>
+                Property AI Guru
+            </h1>
+            <p>Your intelligent real estate assistant for Pune properties</p>
+        </div>
+
+        <div class="chat-area" id="chatArea">
+            <div class="empty-state">
+                <span class="icon material-symbols-outlined">chat_bubble_outline</span>
+                <p>Welcome! How can I help you find your dream property?</p>
+                <div class="suggestions">
+                    <button class="suggestion-btn" onclick="sendMessage('Show me properties in Wakad')">
+                        Properties in Wakad
+                    </button>
+                    <button class="suggestion-btn" onclick="sendMessage('Show me 2 BHK apartments')">
+                        2 BHK Apartments
+                    </button>
+                    <button class="suggestion-btn" onclick="sendMessage('Properties in Pune under 50 lakhs')">
+                        Budget Properties
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="input-area">
+            <form onsubmit="handleSubmit(event)">
+                <input type="text" id="messageInput" placeholder="Ask about properties, locations, amenities..." autocomplete="off">
+                <button type="submit">
+                    <span class="icon material-symbols-outlined">send</span>
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        const chatArea = document.getElementById('chatArea');
+        const messageInput = document.getElementById('messageInput');
+        let isFirstMessage = true;
+
+        function handleSubmit(event) {
+            event.preventDefault();
+            const message = messageInput.value.trim();
+            if (message) {
+                sendMessage(message);
+                messageInput.value = '';
+            }
+        }
+
+        function sendMessage(message) {
+            // Remove empty state on first message
+            if (isFirstMessage) {
+                chatArea.innerHTML = '';
+                isFirstMessage = false;
+            }
+
+            // Add user message
+            addMessage(message, 'user');
+
+            // Show typing indicator
+            const typingIndicator = createTypingIndicator();
+            chatArea.appendChild(typingIndicator);
+            chatArea.scrollTop = chatArea.scrollHeight;
+
+            // Send to backend
+            fetch('http://localhost:8000/query/', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ query: message })
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                return response.json();
+            })
+            .then(data => {
+                // Remove typing indicator
+                typingIndicator.remove();
+
+                // Parse and display response
+                console.log('Response data:', data);
+                const content = data.content || data.results?.[0]?.text || '';
+                if (content) {
+                    displayResponse(content);
+                } else {
+                    addMessage('No response received. Please try again.', 'bot');
+                }
+            })
+            .catch(error => {
+                console.error('Fetch error:', error);
+                typingIndicator.remove();
+                addMessage('Sorry, I encountered an error. Please check if the backend is running on port 8000.', 'bot');
+            });
+        }
+
+        function addMessage(text, sender) {
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${sender}`;
+
+            const contentDiv = document.createElement('div');
+            contentDiv.className = 'message-content';
+            contentDiv.textContent = text;
+
+            messageDiv.appendChild(contentDiv);
+            chatArea.appendChild(messageDiv);
+            chatArea.scrollTop = chatArea.scrollHeight;
+        }
+
+        function createTypingIndicator() {
+            const messageDiv = document.createElement('div');
+            messageDiv.className = 'message bot';
+
+            const indicatorDiv = document.createElement('div');
+            indicatorDiv.className = 'typing-indicator';
+
+            for (let i = 0; i < 3; i++) {
+                const dot = document.createElement('div');
+                dot.className = 'typing-dot';
+                indicatorDiv.appendChild(dot);
+            }
+
+            messageDiv.appendChild(indicatorDiv);
+            return messageDiv;
+        }
+
+        function displayResponse(content) {
+            // Simply parse markdown and display as text (no property cards)
+            const formattedContent = parseMarkdown(content);
+            const messageDiv = document.createElement('div');
+            messageDiv.className = 'message bot';
+
+            const contentDiv = document.createElement('div');
+            contentDiv.className = 'message-content';
+            contentDiv.innerHTML = formattedContent;
+
+            messageDiv.appendChild(contentDiv);
+            chatArea.appendChild(messageDiv);
+            chatArea.scrollTop = chatArea.scrollHeight;
+        }
+
+        function displayPropertyResponse(content) {
+            // Simply display as formatted text (deprecated - now using displayResponse)
+            const formattedContent = parseMarkdown(content);
+            const messageDiv = document.createElement('div');
+            messageDiv.className = 'message bot';
+
+            const contentDiv = document.createElement('div');
+            contentDiv.className = 'message-content';
+            contentDiv.innerHTML = formattedContent;
+
+            messageDiv.appendChild(contentDiv);
+            chatArea.appendChild(messageDiv);
+            chatArea.scrollTop = chatArea.scrollHeight;
+        }
+
+        function displayPropertyResponse_OLD(content) {
+            // OLD: Parse numbered list items (keeping for reference)
+            // This is no longer used - kept for backward compatibility
+            const lines = content.split('\n');
+            const properties = [];
+            let currentProperty = null;
+
+            for (let line of lines) {
+                if (/^\d+\./.test(line.trim())) {
+                    // New property number
+                    if (currentProperty) {
+                        properties.push(currentProperty);
+                    }
+                    const match = line.match(/^\d+\.\s*\*\*([^*]+)\*\*\s*(.+)/);
+                    if (match) {
+                        let description = match[2].trim();
+                        // Remove [More Details](#) pattern
+                        description = description.replace(/\s*\[More Details\]\(#\)\s*/g, '').trim();
+                        currentProperty = {
+                            title: match[1].trim(),
+                            description: description
+                        };
+                    }
+                } else if (currentProperty && line.trim().startsWith('[')) {
+                    // Link line
+                    const linkMatch = line.match(/\[([^\]]+)\]\(([^)]+)\)/);
+                    if (linkMatch) {
+                        currentProperty.link = linkMatch[2];
+                        currentProperty.linkText = linkMatch[1];
+                    }
+                }
+            }
+
+            if (currentProperty) {
+                properties.push(currentProperty);
+            }
+
+            // Display properties
+            if (properties.length > 0) {
+                const messageDiv = document.createElement('div');
+                messageDiv.className = 'message bot';
+
+                const listDiv = document.createElement('div');
+                listDiv.className = 'property-list';
+
+                properties.forEach((prop, index) => {
+                    const propItem = document.createElement('div');
+                    propItem.className = 'property-item';
+                    propItem.innerHTML = `
+                        <div class="property-number">Property ${index + 1}</div>
+                        <div class="property-title">${prop.title}</div>
+                        <div class="property-description">${prop.description}</div>
+                        <a href="${prop.link || '#'}" class="property-link" target="_blank">
+                            ${prop.linkText || 'More Details'} →
+                        </a>
+                    `;
+                    listDiv.appendChild(propItem);
+                });
+
+                messageDiv.appendChild(listDiv);
+                chatArea.appendChild(messageDiv);
+            } else {
+                // Fallback to text display
+                const formattedContent = parseMarkdown(content);
+                const messageDiv = document.createElement('div');
+                messageDiv.className = 'message bot';
+
+                const contentDiv = document.createElement('div');
+                contentDiv.className = 'message-content';
+                contentDiv.innerHTML = formattedContent;
+
+                messageDiv.appendChild(contentDiv);
+                chatArea.appendChild(messageDiv);
+            }
+
+            chatArea.scrollTop = chatArea.scrollHeight;
+        }
+
+        function parseMarkdown(text) {
+            // Markdown links [text](url) -> <a href="url">text</a> (open in same window)
+            text = text.replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" style="color: #00d4ff; text-decoration: none; font-weight: 600; border-bottom: 2px solid #00d4ff; transition: all 0.3s ease;">$1</a>');
+
+            // Bold text
+            text = text.replace(/\*\*(.+?)\*\*/g, '<strong style="color: #00d4ff;">$1</strong>');
+
+            // Bullet points
+            text = text.replace(/• (.+)/g, '<li>$1</li>');
+            text = text.replace(/(<li>.*?<\/li>)/s, (match) => {
+                return '<ul style="margin: 8px 0; padding-left: 20px;">' + match + '</ul>';
+            });
+
+            // Line breaks
+            text = text.replace(/\n\n/g, '</p><p style="margin: 8px 0;">');
+            text = '<p style="margin: 8px 0;">' + text + '</p>';
+
+            return text;
+        }
+
+        // Focus input on load
+        window.addEventListener('load', () => {
+            messageInput.focus();
+        });
+    </script>
+</body>
+</html>
