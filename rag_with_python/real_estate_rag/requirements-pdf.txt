@@ -1,0 +1,2 @@
+# Additional dependency for PDF creation
+reportlab==4.2.5

@@ -1,0 +1,39 @@
+# Git ignore file
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+ENV/
+.venv
+*.egg-info/
+.eggs/
+dist/
+build/
+
+# Environment variables
+.env
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Data files
+data/pdfs/*.pdf
+data/processed/*.pdf
+*.pdf
+
+# Logs
+*.log
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Temp files
+temp_*
+*.tmp

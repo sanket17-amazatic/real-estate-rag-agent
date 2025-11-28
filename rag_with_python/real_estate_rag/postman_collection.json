@@ -1,0 +1,332 @@
+{
+  "info": {
+    "name": "Real Estate RAG System API",
+    "description": "Complete API collection for Real Estate Property Search and RAG System",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Health & Stats",
+      "item": [
+        {
+          "name": "Health Check",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8000/health",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "8000",
+              "path": ["health"]
+            }
+          }
+        },
+        {
+          "name": "Get Stats",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8000/stats",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "8000",
+              "path": ["stats"]
+            }
+          }
+        },
+        {
+          "name": "Root",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8000/",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "8000",
+              "path": [""]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "PDF Ingestion",
+      "item": [
+        {
+          "name": "Ingest PDF",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "file",
+                  "type": "file",
+                  "src": "/path/to/your/property.pdf"
+                },
+                {
+                  "key": "locality",
+                  "value": "Wakad",
+                  "type": "text"
+                },
+                {
+                  "key": "property_type",
+                  "value": "Apartment",
+                  "type": "text"
+                }
+              ]
+            },
+            "url": {
+              "raw": "http://localhost:8000/ingest/pdf",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "8000",
+              "path": ["ingest", "pdf"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "RAG Queries",
+      "item": [
+        {
+          "name": "RAG Query - Amenities",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"query\": \"What are the amenities in Wakad locality?\",\n  \"top_k\": 5,\n  \"include_context\": true\n}"
+            },
+            "url": {
+              "raw": "http://localhost:8000/query/rag",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "8000",
+              "path": ["query", "rag"]
+            }
+          }
+        },
+        {
+          "name": "RAG Query - Project Details",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"query\": \"Tell me about Evergreen Heights project\",\n  \"top_k\": 5,\n  \"include_context\": false\n}"
+            },
+            "url": {
+              "raw": "http://localhost:8000/query/rag",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "8000",
+              "path": ["query", "rag"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Agent Queries",
+      "item": [
+        {
+          "name": "Buy Agent - Search Properties",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"agent_type\": \"buy\",\n  \"message\": \"I want to buy a 2 BHK apartment in Wakad under 80 lakhs\"\n}"
+            },
+            "url": {
+              "raw": "http://localhost:8000/query/agent",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "8000",
+              "path": ["query", "agent"]
+            }
+          }
+        },
+        {
+          "name": "Rent Agent - Rental Search",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"agent_type\": \"rent\",\n  \"message\": \"Looking for a 2 BHK rental in Hinjewadi under 25000 per month\"\n}"
+            },
+            "url": {
+              "raw": "http://localhost:8000/query/agent",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "8000",
+              "path": ["query", "agent"]
+            }
+          }
+        },
+        {
+          "name": "Details Agent - Property Info",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"agent_type\": \"details\",\n  \"message\": \"Tell me about the specifications and amenities of Evergreen Heights\"\n}"
+            },
+            "url": {
+              "raw": "http://localhost:8000/query/agent",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "8000",
+              "path": ["query", "agent"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Auto Routing",
+      "item": [
+        {
+          "name": "Auto Route - Knowledge Query",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8000/query/auto?query=What are the schools near Wakad?",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "8000",
+              "path": ["query", "auto"],
+              "query": [
+                {
+                  "key": "query",
+                  "value": "What are the schools near Wakad?"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Auto Route - Buy Query",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8000/query/auto?query=I want to buy a property in Baner",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "8000",
+              "path": ["query", "auto"],
+              "query": [
+                {
+                  "key": "query",
+                  "value": "I want to buy a property in Baner"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Auto Route - Rent Query",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8000/query/auto?query=Looking for rentals in Hinjewadi",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "8000",
+              "path": ["query", "auto"],
+              "query": [
+                {
+                  "key": "query",
+                  "value": "Looking for rentals in Hinjewadi"
+                }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Property Search",
+      "item": [
+        {
+          "name": "Search Properties",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"query\": \"2 BHK in Wakad\",\n  \"locality\": \"Wakad\",\n  \"min_price\": 5000000,\n  \"max_price\": 10000000,\n  \"bedrooms\": 2\n}"
+            },
+            "url": {
+              "raw": "http://localhost:8000/search/properties",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "8000",
+              "path": ["search", "properties"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Admin",
+      "item": [
+        {
+          "name": "Reset Collection",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8000/admin/reset-collection",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "8000",
+              "path": ["admin", "reset-collection"]
+            }
+          }
+        }
+      ]
+    }
+  ]
+}
